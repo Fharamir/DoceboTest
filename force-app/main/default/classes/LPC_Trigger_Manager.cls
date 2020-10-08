@@ -2,7 +2,7 @@
  * @description       : 
  * @author            : f.ruggieri89@gmail.com
  * @group             : 
- * @last modified on  : 10-08-2020
+ * @last modified on  : 10-09-2020
  * @last modified by  : f.ruggieri89@gmail.com
  * Modifications Log 
  * Ver   Date         Author                   Modification
@@ -10,6 +10,9 @@
 **/
 public with sharing class LPC_Trigger_Manager {
     
+    public static LearningPlanHandler lph;
+    public static CourseHandler       ch;
+
     public static void runBefore(List<Learning_Plan_Course__c> newData, Map<ID, Learning_Plan_Course__c> oldData) {
         
         Map<String, Learning_Plan__c> lnplanids = new Map<String, Learning_Plan__c>();
@@ -25,7 +28,7 @@ public with sharing class LPC_Trigger_Manager {
             }
         }
 
-        if (!lnplanids.isEmpty() || !courseids.isEmpty()) reparent(newData, lnplanids, courseids);
+        if (!lnplanids.isEmpty()) reparent(newData, lnplanids, courseids);
 
         integrityControl(newData);
     }
@@ -33,15 +36,18 @@ public with sharing class LPC_Trigger_Manager {
     @testVisible
     private static void reparent(List<Learning_Plan_Course__c> newData, Map<String, Learning_Plan__c> lnplanids, Map<String, Course__c> courseids){
 
-        List<Learning_Plan__c> lnplans = [SELECT ID, LearningPlanId__c FROM Learning_Plan__c WHERE LearningPlanId__c IN :lnplanids.keySet()];
-        List<Course__c>        courses = [SELECT ID, courseId__c       FROM Course__c        WHERE courseId__c       IN :courseids.keySet()];
+        ch  = ch  == null ? new CourseHandler()       : ch;
+        lph = lph == null ? new LearningPlanHandler() : lph;
 
-        for (Learning_Plan__c lp : lnplans) lnplanids.put(lp.LearningPlanId__c, lp);
-        for (Course__c        cs : courses) courseids.put(cs.courseId__c,       cs);
+        ch.findCoursesByID(courseids);
+        lph.findLearningplansByID(lnplanids);
 
         for (Learning_Plan_Course__c lpc : newData) {
-            lpc.Learning_Plan__c = lnplanids.get(lpc.LearningPlanId__c).ID;
-            lpc.Course__c        = courseids.get(lpc.courseId__c      ).ID;
+            //Reparent learningplans
+            lpc.Learning_Plan__c = lnplanids.get(lpc.LearningPlanId__c) != null ? lnplanids.get(lpc.LearningPlanId__c).ID : null;
+
+            //Reparent Courses
+            lpc.Course__c = courseids.get(lpc.courseId__c) != null ? courseids.get(lpc.courseId__c).ID : null;
         }
     }
 
