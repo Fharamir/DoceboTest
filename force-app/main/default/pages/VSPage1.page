@@ -1,0 +1,104 @@
+<!--
+  @description       : 
+  @author            : f.ruggieri89@gmail.com
+  @group             : 
+  @last modified on  : 10-10-2020
+  @last modified by  : f.ruggieri89@gmail.com
+  Modifications Log 
+  Ver   Date         Author                   Modification
+  1.0   10-10-2020   f.ruggieri89@gmail.com   Initial Version
+-->
+<apex:page controller="vsPage1_Controller">
+<apex:slds />
+<div class="maincontainer">
+
+    <div class="title">
+        {!$Label.Page_Title}
+    </div>
+
+    <apex:form>
+        
+        <div class="searchBox">
+            <apex:outputPanel styleClass="searchBox" id="sBox_Container">
+                <apex:inputText style="margin: 4px;" styleClass="sBar" label="{!$Label.SBAR_Label}" value="{!searchbar}" />
+                <apex:commandButton style="margin: 4px;" value="Search" action="{!retrieveStudent}" reRender="resultBox,dataHighlight" status="pageSpinner" />
+                
+                <div Class="resBox">
+                    <apex:outputPanel id="resultBox">
+                        <apex:repeat var="student" value="{!students}">
+                            <div Class="singleStudent">
+                                <table><tr>
+                                    <td><apex:commandLink action="{!selectedStudent}" value="{!student.name}"><apex:param  value="{!student.sf_id}" name="student_sf_id" assignto="{!clickedStudent}"/></apex:commandLink></td>
+                                    <td style="text-align: right;">{!student.type}</td></tr></table>
+                            </div>
+                        </apex:repeat>
+                    </apex:outputPanel>
+                </div>
+            </apex:outputPanel>
+        </div>
+
+        <apex:outputPanel id="dataHighlight" rendered="{!highlighted != null}">
+            <div class="dataHighlight">
+                    {!highlighted.Name}
+            </div>
+        </apex:outputPanel>
+
+        <!-- Page spinner -->
+        <apex:actionStatus onstart="showSpinner();" onstop="hideSpinner();" id="pageSpinner" startText="Please wait..." stopText="" />
+        <div class="demo-only demo--inverse" style="height:6rem; display:none; z-index:50;" id="pageSpinner">
+            <div class="slds-spinner_container slds-is-fixed">
+                <div role="status" class="slds-spinner slds-spinner_medium">
+                    <span class="slds-assistive-text">Loading</span>
+                    <div class="slds-spinner__dot-a"></div>
+                    <div class="slds-spinner__dot-b"></div>
+                </div>
+            </div>
+        </div>
+    </apex:form>
+    
+</div>
+
+    <script type="text/javascript">
+        function showSpinner() {
+            document.getElementById('pageSpinner').style.display = 'block';
+        }
+        function hideSpinner() {
+            document.getElementById('pageSpinner').style.display = 'none';
+        }
+    </script>
+
+    <style type="text/css">
+        .maincontainer {
+            margin: 8%;
+            font-size: 11px;
+            width: 90%;
+        }
+        .title {
+            font-size: 20px;
+        }
+        .sBar {
+            width: 80%;
+            font-size: 14px;
+            margin: 4px;
+        }
+        .searchBox {
+            width: 75%;
+        }
+        .resBox {
+            height: 150px;
+            width: 100%;
+            overflow-y: auto;
+        }
+        .singleStudent {
+            height: 20px;
+            width: 90%;
+        }
+        .dataHighlight {
+            margin-top: 50px;
+            width: 75%;
+            border: 2px solid black;
+            border-radius: 4px;
+        }
+    </style>
+
+</apex:page>

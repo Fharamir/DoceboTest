@@ -2,7 +2,7 @@
  * @description       : 
  * @author            : f.ruggieri89@gmail.com
  * @group             : 
- * @last modified on  : 10-09-2020
+ * @last modified on  : 10-10-2020
  * @last modified by  : f.ruggieri89@gmail.com
  * Modifications Log 
  * Ver   Date         Author                   Modification
@@ -46,5 +46,33 @@ public with sharing class StudentHandler {
             recordsMap.put(((String)us.ID).left(15), us);
         }
         return recordsMap;
+    }
+
+    public List<Student_wrapper> getStudentsByName(string name) {
+
+        List<Student_wrapper> swList = new List<Student_wrapper>();
+        name = String.escapeSingleQuotes('%' + name + '%');
+
+        for (User student : [SELECT Name, ID FROM User WHERE Name LIKE :name]) {
+            Student_wrapper sw = new Student_wrapper();
+
+            sw.name  = student.Name;
+            sw.sf_id = student.ID;
+            sw.type  = 'User';
+            swList.add(sw);
+        }
+
+        for (Contact student : [SELECT Name, ID FROM Contact WHERE Name LIKE :name]) {
+            Student_wrapper sw = new Student_wrapper();
+
+            sw.name  = student.Name;
+            sw.sf_id = student.ID;
+            sw.type  = 'Contact';
+            swList.add(sw);
+        }
+
+        //sort(swList, 'ASC'); <-- no enough time for this :)
+
+        return swList;
     }
 }

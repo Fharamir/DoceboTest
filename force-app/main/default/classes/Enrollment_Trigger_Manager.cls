@@ -30,9 +30,17 @@ public with sharing class Enrollment_Trigger_Manager {
 
             //Set enrollment date
             if (Trigger.isInsert && enr.EnrollmentDate__c == null) enr.EnrollmentDate__c = System.today();
+
+            //Set Completion date
+            if (enr.DateCompleted__c == null && 'Completed'.equalsIgnoreCase(enr.Status__c)) enr.DateCompleted__c = System.today();
         }
 
         if (!student.isEmpty()) reparent(newData, student, courses);
+
+        //Duplicate check
+        for (Enrollment__c enr : newData) {
+            enr.DuplicateChecker__c = enr.idst__c + enr.CourseId__c;
+        }
     }
 
     @testVisible

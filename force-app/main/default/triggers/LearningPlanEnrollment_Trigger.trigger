@@ -8,9 +8,10 @@
  * Ver   Date         Author                   Modification
  * 1.0   10-10-2020   f.ruggieri89@gmail.com   Initial Version
 **/
-trigger LearningPlanEnrollment_Trigger on LearningPlanEnrollment__c (before insert, before update) {
+trigger LearningPlanEnrollment_Trigger on LearningPlanEnrollment__c (before insert, before update, after insert) {
 
     if (!TriggerManager.shouldGo('LearningPlanEnrollment_Trigger') || !Boolean.valueOf(Label.LPEnrollment_Trigger_Enabled)) return;
 
     if (Trigger.isBefore) LearningPlanEnrollment_Trigger_Manager.runBefore(Trigger.New, Trigger.oldMap);
+    if (Trigger.isAfter)  LearningPlanEnrollment_Trigger_Manager.runAfter( Trigger.New, Trigger.oldMap);
 }

@@ -17,7 +17,6 @@ public with sharing class LearningPlanEnrollment_Trigger_Manager {
 
         Map<String, SObject>            student  = new Map<String, SObject>();
         Map<String, Learning_Plan__c>   lplans   = new Map<String, Learning_Plan__c>();
-        List<LearningPlanEnrollment__c> newPlans = new List<LearningPlanEnrollment__c>();
 
         for (LearningPlanEnrollment__c lpe : newData) {
 
@@ -31,16 +30,32 @@ public with sharing class LearningPlanEnrollment_Trigger_Manager {
 
             //Set enrollment date
             if (Trigger.isInsert && lpe.EnrollmentDate__c == null) lpe.EnrollmentDate__c = System.today();
+        }
+
+        if (!student.isEmpty()) reparent(newData, student, lplans);
+
+        //Duplicate check
+        for (LearningPlanEnrollment__c lpe : newData) {
+            lpe.DuplicateChecker__c = lpe.idst__c + lpe.LearningPlanId__c;
+        }
+    }
+
+    public static void runAfter(List<LearningPlanEnrollment__c> newData, Map<ID, LearningPlanEnrollment__c> oldData) {
+
+        List<LearningPlanEnrollment__c> newPlans = new List<LearningPlanEnrollment__c>();
+
+        for (LearningPlanEnrollment__c lpe : newData) {
 
             //Manage new plan enrollment
             if (Trigger.isInsert) newPlans.add(lpe);
         }
 
-        if (!student.isEmpty()) reparent(newData, student, lplans);
-
         //New Learning plan enrollments means new enrollment for each course of the learning plan
-        if (!newPlans.isEmpty() && newPlans.size() <= 5) manageNewPlans(newPlans);
-        else if (newPlans.size() > 5) System.enqueueJob(new manageNewPlans_async(newPlans));
+        if (!newPlans.isEmpty() && newPlans.size() <= 5) LearningPlanHandler.manageNewPlanEnrollments(newPlans);
+        else if (newPlans.size() > 5) {
+            System.debug('Starting Async LP Enrollment for ' + newPlans.size() + ' records');
+            System.enqueueJob(new manageNewPlans_async(newPlans));
+        }
     }
 
     @testVisible
@@ -65,12 +80,6 @@ public with sharing class LearningPlanEnrollment_Trigger_Manager {
         }
     }
 
-    @testVisible
-    private static void manageNewPlans(List<LearningPlanEnrollment__c> newPlans) {
-
-        
-    }
-
     public class manageNewPlans_async implements Queueable {
 
         private List<LearningPlanEnrollment__c> newPlans;
@@ -81,11 +90,7 @@ public with sharing class LearningPlanEnrollment_Trigger_Manager {
         public void execute(QueueableContext qc){
 
             if (newPlans == null) return;
-            System.debug('Starting Async LP Enrollment for ' + newPlans.size() + ' records');
-
-            LearningPlanEnrollment_Trigger_Manager.manageNewPlans(newPlans);
-
-            System.debug('Ending Async LP Enrollments');
+            LearningPlanHandler.manageNewPlanEnrollments(newPlans);
         }
     }
 }

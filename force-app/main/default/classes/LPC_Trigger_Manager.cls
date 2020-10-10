@@ -25,13 +25,18 @@ public with sharing class LPC_Trigger_Manager {
             //Check if reparent is needed
             if (Trigger.isInsert || lpc.LearningPlanId__c != oldRecord.LearningPlanId__c  || lpc.courseId__c != oldRecord.courseId__c) {
                 lnplanids.put(lpc.LearningPlanId__c, null);
-                courseids.put(lpc.courseId__c,       null);
+                courseids.put(lpc.CourseId__c,       null);
             }
         }
 
         if (!lnplanids.isEmpty()) reparent(newData, lnplanids, courseids);
 
         integrityControl(newData);
+
+        //Duplicate check
+        for (Learning_Plan_Course__c lpc : newData) {
+            lpc.DuplicateChecker__c = lpc.LearningPlanId__c + lpc.CourseId__c;
+        }
     }
 
     @testVisible

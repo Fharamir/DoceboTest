@@ -28,10 +28,26 @@ public with sharing class CourseHandler {
 
             ID student = enr.Student_Contact__c == null ? enr.Student_User__c : enr.Student_Contact__c;
 
-            if (result.get(student) == null) result.put(student, new List<Course__c>{enr.Course__r});
+            if  (result.get(student) == null) result.put(student, new List<Course__c>{enr.Course__r});
             else result.get(student).add(enr.Course__r);
         }
  
+        return result;
+    }
+
+    public Map<ID, List<Course__c>> findCoursesByLearningPlan(Set<ID> lplans) {
+
+        Map<ID, List<Course__c>> result = new Map<ID, List<Course__c>>();
+
+        for (Learning_Plan_Course__c lpc : [ SELECT Course__r.ID, Course__r.Code__c, Course__r.Description__c, Course__r.courseId__c, 
+                                                    Learning_Plan__c 
+                                             FROM   Learning_Plan_Course__c 
+                                             WHERE  Learning_Plan__c IN :lplans]) {
+            
+            if  (result.get(lpc.Learning_Plan__c) == null) result.put(lpc.Learning_Plan__c, new List<Course__c>{lpc.Course__r});
+            else result.get(lpc.Learning_Plan__c).add(lpc.Course__r);
+        }
+
         return result;
     }
 }
