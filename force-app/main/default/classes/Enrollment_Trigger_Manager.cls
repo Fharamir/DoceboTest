@@ -2,7 +2,7 @@
  * @description       : 
  * @author            : f.ruggieri89@gmail.com
  * @group             : 
- * @last modified on  : 10-09-2020
+ * @last modified on  : 10-10-2020
  * @last modified by  : f.ruggieri89@gmail.com
  * Modifications Log 
  * Ver   Date         Author                   Modification
@@ -22,10 +22,14 @@ public with sharing class Enrollment_Trigger_Manager {
 
             Enrollment__c oldRecord = oldData == null ? null : oldData.get(enr.ID);
             
+            //Check if reparent is needed
             if (Trigger.isInsert || enr.idst__c != oldRecord.idst__c || enr.CourseId__c != oldRecord.CourseId__c) {
                 student.put(enr.idst__c,     null);
                 courses.put(enr.CourseId__c, null);
             }
+
+            //Set enrollment date
+            if (Trigger.isInsert && enr.EnrollmentDate__c == null) enr.EnrollmentDate__c = System.today();
         }
 
         if (!student.isEmpty()) reparent(newData, student, courses);

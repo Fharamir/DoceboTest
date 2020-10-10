@@ -2,7 +2,7 @@
  * @description       : 
  * @author            : f.ruggieri89@gmail.com
  * @group             : 
- * @last modified on  : 10-09-2020
+ * @last modified on  : 10-10-2020
  * @last modified by  : f.ruggieri89@gmail.com
  * Modifications Log 
  * Ver   Date         Author                   Modification
@@ -22,6 +22,7 @@ public with sharing class LPC_Trigger_Manager {
 
             Learning_Plan_Course__c oldRecord = oldData == null ? null : oldData.get(lpc.ID);
 
+            //Check if reparent is needed
             if (Trigger.isInsert || lpc.LearningPlanId__c != oldRecord.LearningPlanId__c  || lpc.courseId__c != oldRecord.courseId__c) {
                 lnplanids.put(lpc.LearningPlanId__c, null);
                 courseids.put(lpc.courseId__c,       null);
