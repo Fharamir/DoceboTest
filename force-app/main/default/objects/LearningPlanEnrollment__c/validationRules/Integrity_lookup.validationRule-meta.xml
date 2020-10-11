@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Integrity_lookup</fullName>
+    <active>true</active>
+    <description>Controlla se almeno una lookup verso lo studente è popolata</description>
+    <errorConditionFormula>Student_User__c = null  &amp;&amp;  Student_Contact__c = null</errorConditionFormula>
+    <errorMessage>Non è stato trovato uno studente a cui associare l&apos;iscrizione</errorMessage>
+</ValidationRule>

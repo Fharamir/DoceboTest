@@ -28,7 +28,7 @@
                     <apex:repeat var="student" value="{!maindata}">
                         <div Class="singleStudent">
                             <table><tr>
-                                <td><apex:commandLink action="{!controller.selectedStudent}" value="{!student.name}"><apex:param  value="{!student.sf_id}" name="student_sf_id" assignto="{!controller.clickedStudent}"/></apex:commandLink></td>
+                                <td><apex:commandLink action="{!controller.selectedStudent}" value="{!student.name}"><apex:param value="{!student.sf_id}" name="student_sf_id" assignto="{!controller.clickedStudent}"/></apex:commandLink></td>
                                 <td style="text-align: right;">{!student.type}</td>
                             </tr></table>
                         </div>

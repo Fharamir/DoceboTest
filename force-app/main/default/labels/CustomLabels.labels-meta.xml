@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomLabels xmlns="http://soap.sforce.com/2006/04/metadata">
+    <labels>
+        <fullName>Enrollment_Trigger_Enabled</fullName>
+        <categories>TRIGGERS</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Enrollment Trigger Enabled</shortDescription>
+        <value>true</value>
+    </labels>
+    <labels>
+        <fullName>LPC_Trigger_Enabled</fullName>
+        <categories>TRIGGERS</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>LPC Trigger Enabled</shortDescription>
+        <value>true</value>
+    </labels>
+    <labels>
+        <fullName>LPEnrollment_Trigger_Enabled</fullName>
+        <categories>TRIGGERS</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>LPEnrollment_Trigger_Enabled</shortDescription>
+        <value>true</value>
+    </labels>
+    <labels>
+        <fullName>Page_Title</fullName>
+        <categories>FE VIEW</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Page Title</shortDescription>
+        <value>Ricerca studente</value>
+    </labels>
+    <labels>
+        <fullName>SBAR_Label</fullName>
+        <categories>FE VIEW</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>SBAR Label</shortDescription>
+        <value>Nome :</value>
+    </labels>
+</CustomLabels>

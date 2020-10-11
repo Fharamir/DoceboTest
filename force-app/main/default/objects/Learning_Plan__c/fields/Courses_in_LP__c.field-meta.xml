@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Courses_in_LP__c</fullName>
+    <description>counts the courses per LP</description>
+    <externalId>false</externalId>
+    <label>Courses in LP</label>
+    <summaryForeignKey>Learning_Plan_Course__c.Learning_Plan__c</summaryForeignKey>
+    <summaryOperation>count</summaryOperation>
+    <trackTrending>false</trackTrending>
+    <type>Summary</type>
+</CustomField>
