@@ -1,0 +1,62 @@
+<!--
+  @description       : 
+  @author            : f.ruggieri89@gmail.com
+  @group             : 
+  @last modified on  : 10-11-2020
+  @last modified by  : f.ruggieri89@gmail.com
+  Modifications Log 
+  Ver   Date         Author                   Modification
+  1.0   10-11-2020   f.ruggieri89@gmail.com   Initial Version
+-->
+<apex:component controller="relatedlist_controller">
+
+    <apex:attribute name="List"  required="true" assignTo="{!dataSource}" type="GenericDataWrapper" description="main data received from caller" />
+    <apex:attribute name="PCTRL" required="true" assignTo="{!controller}" type="vsPage1_Controller" description="main page controller" />
+
+    <div class="clr_maincontainer">
+        <apex:outputPanel id="ButtonsPanel" >
+            <div class="slds-button-group buttons" role="group">
+                <apex:commandButton styleClass="slds-button slds-button_neutral" value="|<- Start"    action="{!dataManager.goStart}" status="pageSpinner" disabled="{!!dataManager.hasPrev}" reRender="ButtonsPanel,DataPanel" />
+                <apex:commandButton styleClass="slds-button slds-button_neutral" value="<-- Previous" action="{!dataManager.goPrev}"  status="pageSpinner" disabled="{!!dataManager.hasPrev}" reRender="ButtonsPanel,DataPanel" />
+                <apex:commandButton styleClass="slds-button slds-button_neutral" value="Next -->"     action="{!dataManager.goNext}"  status="pageSpinner" disabled="{!!dataManager.hasNext}" reRender="ButtonsPanel,DataPanel" />
+                <apex:commandButton styleClass="slds-button slds-button_neutral" value="End ->|"      action="{!dataManager.goEnd}"   status="pageSpinner" disabled="{!!dataManager.hasNext}" reRender="ButtonsPanel,DataPanel" />
+            </div>
+        </apex:outputPanel>
+        <apex:outputPanel id="DataPanel" >
+            <div class="crl_container">
+                <div class="clr_datashow">
+                    <apex:repeat var="student" value="{!maindata}">
+                        <div Class="singleStudent">
+                            <table><tr>
+                                <td><apex:commandLink action="{!controller.selectedStudent}" value="{!student.name}"><apex:param  value="{!student.sf_id}" name="student_sf_id" assignto="{!controller.clickedStudent}"/></apex:commandLink></td>
+                                <td style="text-align: right;">{!student.type}</td>
+                            </tr></table>
+                        </div>
+                    </apex:repeat>
+                </div>
+                <div class="clr_datafooter">
+                    <apex:outputText value="{!footerText}" escape="false" />
+                </div>
+            </div>
+        </apex:outputPanel>
+    </div>
+
+    <style type="text/css">
+        .clr_maincontainer {
+            margin: 2px;
+            width: 90%;
+        }
+        .buttons {
+            width: 100%;
+            margin: 2px;
+        }
+        .crl_container {
+            width: 100%;
+            margin: 2px;
+        }
+        .singleStudent {
+            height: 20px;
+            width: 100%;
+        }
+    </style>
+</apex:component>

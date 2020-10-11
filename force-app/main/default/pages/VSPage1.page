@@ -2,7 +2,7 @@
   @description       : 
   @author            : f.ruggieri89@gmail.com
   @group             : 
-  @last modified on  : 10-10-2020
+  @last modified on  : 10-11-2020
   @last modified by  : f.ruggieri89@gmail.com
   Modifications Log 
   Ver   Date         Author                   Modification
@@ -23,23 +23,17 @@
                 <apex:inputText style="margin: 4px;" styleClass="sBar" label="{!$Label.SBAR_Label}" value="{!searchbar}" />
                 <apex:commandButton style="margin: 4px;" value="Search" action="{!retrieveStudent}" reRender="resultBox,dataHighlight" status="pageSpinner" />
                 
-                <div Class="resBox">
-                    <apex:outputPanel id="resultBox">
-                        <apex:repeat var="student" value="{!students}">
-                            <div Class="singleStudent">
-                                <table><tr>
-                                    <td><apex:commandLink action="{!selectedStudent}" value="{!student.name}"><apex:param  value="{!student.sf_id}" name="student_sf_id" assignto="{!clickedStudent}"/></apex:commandLink></td>
-                                    <td style="text-align: right;">{!student.type}</td></tr></table>
-                            </div>
-                        </apex:repeat>
-                    </apex:outputPanel>
-                </div>
+                <apex:outputPanel id="resultBox">
+                    <div Class="resBox">
+                        <c:customRelatedList List="{!wrapperData}" PCTRL="{!controllerInstance}" />
+                    </div>
+                </apex:outputPanel>
             </apex:outputPanel>
         </div>
 
         <apex:outputPanel id="dataHighlight" rendered="{!highlighted != null}">
             <div class="dataHighlight">
-                    {!highlighted.Name}
+                    <c:StudentViewer studente="{!highlighted}" />
             </div>
         </apex:outputPanel>
 
@@ -69,9 +63,9 @@
 
     <style type="text/css">
         .maincontainer {
-            margin: 8%;
-            font-size: 11px;
-            width: 90%;
+            margin: 2%;
+            font-size: 13px;
+            width: 95%;
         }
         .title {
             font-size: 20px;
@@ -82,22 +76,17 @@
             margin: 4px;
         }
         .searchBox {
-            width: 75%;
+            width: 80%;
         }
         .resBox {
-            height: 150px;
             width: 100%;
-            overflow-y: auto;
-        }
-        .singleStudent {
-            height: 20px;
-            width: 90%;
         }
         .dataHighlight {
             margin-top: 50px;
-            width: 75%;
+            width: 95%;
             border: 2px solid black;
-            border-radius: 4px;
+            border-radius: 16px;
+            padding: 20px;
         }
     </style>
 

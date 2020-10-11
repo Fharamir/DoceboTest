@@ -1,8 +1,8 @@
 /**
- * @description       : 
+ * @description       : Trigger Handler Class (LearningPlanEnrollment__c)
  * @author            : f.ruggieri89@gmail.com
  * @group             : 
- * @last modified on  : 10-10-2020
+ * @last modified on  : 10-12-2020
  * @last modified by  : f.ruggieri89@gmail.com
  * Modifications Log 
  * Ver   Date         Author                   Modification
@@ -12,11 +12,19 @@ public with sharing class LearningPlanEnrollment_Trigger_Manager {
     
     public static LearningPlanHandler lph;
     public static StudentHandler      sh;
+    public static List<LearningPlanEnrollment__c> toRecalc;
 
+    /**
+    * @description Main "before" method
+    * @author f.ruggieri89@gmail.com | 10-12-2020 
+    * @param newData From Trigger.new
+    * @param oldData From Trigger.oldMap
+    **/
     public static void runBefore(List<LearningPlanEnrollment__c> newData, Map<ID, LearningPlanEnrollment__c> oldData) {
 
         Map<String, SObject>            student  = new Map<String, SObject>();
         Map<String, Learning_Plan__c>   lplans   = new Map<String, Learning_Plan__c>();
+        toRecalc = new List<LearningPlanEnrollment__c>();
 
         for (LearningPlanEnrollment__c lpe : newData) {
 
@@ -30,6 +38,11 @@ public with sharing class LearningPlanEnrollment_Trigger_Manager {
 
             //Set enrollment date
             if (Trigger.isInsert && lpe.EnrollmentDate__c == null) lpe.EnrollmentDate__c = System.today();
+
+            if (lpe.CoursesRecalculation__c) {
+                lpe.CoursesRecalculation__c = false;
+                toRecalc.add(lpe);
+            }
         }
 
         if (!student.isEmpty()) reparent(newData, student, lplans);
@@ -40,9 +53,17 @@ public with sharing class LearningPlanEnrollment_Trigger_Manager {
         }
     }
 
+    /**
+    * @description Main "after" method
+    * @author f.ruggieri89@gmail.com | 10-12-2020 
+    * @param newData From Trigger.new
+    * @param oldData From Trigger.oldMap
+    **/
     public static void runAfter(List<LearningPlanEnrollment__c> newData, Map<ID, LearningPlanEnrollment__c> oldData) {
 
         List<LearningPlanEnrollment__c> newPlans = new List<LearningPlanEnrollment__c>();
+
+        if (toRecalc != null && !toRecalc.isEmpty()) newPlans.addAll(toRecalc);
 
         for (LearningPlanEnrollment__c lpe : newData) {
 
@@ -58,6 +79,13 @@ public with sharing class LearningPlanEnrollment_Trigger_Manager {
         }
     }
 
+    /**
+    * @description This method recalculates master-detail and lookup values when an external ID changes
+    * @author f.ruggieri89@gmail.com | 10-12-2020 
+    * @param newData From Trigger.new
+    * @param student Map of mixed Contacts and Users (key - external id)
+    * @param lplans  Map of Learning_Plan__c (key - external id)
+    **/
     @testVisible
     private static void reparent(List<LearningPlanEnrollment__c> newData, Map<String, SObject> student, Map<String, Learning_Plan__c> lplans){
 
@@ -75,11 +103,14 @@ public with sharing class LearningPlanEnrollment_Trigger_Manager {
             if (String.isNotBlank(lpe.idst__c)) {
                 String key = lpe.idst__c.left(15);
                 if (key.startsWith('005') && student.get(key) != null) lpe.Student_User__c = student.get(key).ID;
-                else if (key.startsWith('002') && student.get(key) != null) lpe.Student_Contact__c = student.get(key).ID;
+                else if (key.startsWith('003') && student.get(key) != null) lpe.Student_Contact__c = student.get(key).ID;
             }
         }
     }
 
+    /*
+     * In case of larger number of operations, the method (manageNewPlanEnrollments) will be executed in async mode
+     */
     public class manageNewPlans_async implements Queueable {
 
         private List<LearningPlanEnrollment__c> newPlans;

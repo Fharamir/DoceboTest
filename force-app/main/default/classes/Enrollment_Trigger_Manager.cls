@@ -1,8 +1,8 @@
 /**
- * @description       : 
+ * @description       : Trigger Handler Class (Enrollment__c)
  * @author            : f.ruggieri89@gmail.com
  * @group             : 
- * @last modified on  : 10-10-2020
+ * @last modified on  : 10-12-2020
  * @last modified by  : f.ruggieri89@gmail.com
  * Modifications Log 
  * Ver   Date         Author                   Modification
@@ -13,6 +13,12 @@ public with sharing class Enrollment_Trigger_Manager {
     public static CourseHandler  ch;
     public static StudentHandler sh;
 
+    /**
+    * @description Main "before" method
+    * @author f.ruggieri89@gmail.com | 10-12-2020 
+    * @param newData From Trigger.new
+    * @param oldData From Trigger.oldMap
+    **/
     public static void runBefore(List<Enrollment__c> newData, Map<ID, Enrollment__c> oldData) {
 
         Map<String, SObject>   student = new Map<String, SObject>();
@@ -27,6 +33,9 @@ public with sharing class Enrollment_Trigger_Manager {
                 student.put(enr.idst__c,     null);
                 courses.put(enr.CourseId__c, null);
             }
+
+            //Default Status
+            if (String.isBlank(enr.Status__c)) enr.Status__c = 'Subscribed';
 
             //Set enrollment date
             if (Trigger.isInsert && enr.EnrollmentDate__c == null) enr.EnrollmentDate__c = System.today();
@@ -43,6 +52,13 @@ public with sharing class Enrollment_Trigger_Manager {
         }
     }
 
+    /**
+    * @description This method recalculates master-detail and lookup values when an external ID changes
+    * @author f.ruggieri89@gmail.com | 10-12-2020 
+    * @param newData From Trigger.new
+    * @param student Map of mixed Contacts and Users (key - external id)
+    * @param courses Map of Course__c (key - external id)
+    **/
     @testVisible
     private static void reparent(List<Enrollment__c> newData, Map<String, SObject> student, Map<String, Course__c> courses){
 
@@ -60,7 +76,7 @@ public with sharing class Enrollment_Trigger_Manager {
             if (String.isNotBlank(enr.idst__c)) {
                 String key = enr.idst__c.left(15);
                 if (key.startsWith('005') && student.get(key) != null) enr.Student_User__c = student.get(key).ID;
-                else if (key.startsWith('002') && student.get(key) != null) enr.Student_Contact__c = student.get(key).ID;
+                else if (key.startsWith('003') && student.get(key) != null) enr.Student_Contact__c = student.get(key).ID;
             }
         }
     }

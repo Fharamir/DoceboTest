@@ -1,8 +1,8 @@
 /**
- * @description       : 
+ * @description       : Utility class
  * @author            : f.ruggieri89@gmail.com
  * @group             : 
- * @last modified on  : 10-10-2020
+ * @last modified on  : 10-12-2020
  * @last modified by  : f.ruggieri89@gmail.com
  * Modifications Log 
  * Ver   Date         Author                   Modification
@@ -10,6 +10,9 @@
 **/
 public with sharing class CourseHandler {
     
+    /*
+     * retrieves a Course (Course__c) from external id (courseId__c) [Bulk]
+     */
     public void findCoursesByID(Map<String, Course__c> dataSource){
 
         for (Course__c course : [SELECT ID, courseId__c FROM Course__c WHERE courseId__c IN :dataSource.keySet()]) {
@@ -17,6 +20,9 @@ public with sharing class CourseHandler {
         }
     }
 
+    /*
+     * 'students' Set<ID> is a set of SF ids taken from Contacts and Users
+     */
     public Map<ID, List<Course__c>> findCoursesByStudent(Set<ID> students){
 
         Map<ID, List<Course__c>> result = new Map<ID, List<Course__c>>();
@@ -35,6 +41,9 @@ public with sharing class CourseHandler {
         return result;
     }
 
+    /*
+     * returns a list of courses (Course__c) for each valid LearningPlan ID in input
+     */
     public Map<ID, List<Course__c>> findCoursesByLearningPlan(Set<ID> lplans) {
 
         Map<ID, List<Course__c>> result = new Map<ID, List<Course__c>>();

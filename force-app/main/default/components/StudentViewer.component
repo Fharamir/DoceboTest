@@ -1,0 +1,94 @@
+<!--
+  @description       : 
+  @author            : f.ruggieri89@gmail.com
+  @group             : 
+  @last modified on  : 10-12-2020
+  @last modified by  : f.ruggieri89@gmail.com
+  Modifications Log 
+  Ver   Date         Author                   Modification
+  1.0   10-11-2020   f.ruggieri89@gmail.com   Initial Version
+-->
+<apex:component controller="studentviewer_CTRL">
+    <apex:attribute name="studente"  required="true" assignTo="{!student}" type="Student_wrapper" description="main data received from caller" />
+
+    <div class="std_name">
+        <apex:outputText value="{!student.name} [{!student.type}]" />
+    </div>
+    <div class="section_data">
+        <div class="titoletto">Piani di studio</div>
+        <apex:repeat value="{!student.lPlansVal}" var="plan">
+            <div class="aninfo">
+                <table class="slds-table slds-table_cell-buffer slds-table_header-hidden slds-table_fixed-layout">
+                    <tr>
+                        <td class="slds-cell-wrap">Nome<br/>{!plan.Name}</td>
+                        <td class="slds-cell-wrap">Codice<br/>{!plan.Code__c}</td>
+                        <td class="slds-cell-wrap">ID<br/>{!plan.LearningPlanId__c}</td>
+                        <td class="slds-cell-wrap">
+                            <apex:outputText value="Data iscrizione<br/>{0,date,long}" escape="false">
+                                <apex:param value="{!student.enrolledLplans[plan.ID].EnrollmentDate__c}" /> 
+                            </apex:outputText>
+                        </td>
+                        <td class="slds-cell-wrap">N.Corsi nel piano<br/>{!plan.Courses_in_LP__c}</td>
+                        <td class="slds-cell-wrap">N.Corsi completati<br/>{!student.lpCompledCourses[plan.ID]} ({!ROUND(student.lPlansPercentages[plan.ID],1)}%)</td>
+                    </tr>
+                    <tr>
+                        <td class="slds-cell-wrap" colspan="6">Descrizione<br/>{!plan.Description__c}</td>
+                    </tr>
+                </table>
+            </div>
+        </apex:repeat>
+    </div>
+    <div class="section_data">
+        <div class="titoletto">Corsi</div>
+        <apex:repeat value="{!student.coursesVal}" var="course">
+            <div class="aninfo">
+                <table class="slds-table slds-table_cell-buffer slds-table_header-hidden slds-table_fixed-layout">
+                    <tr>
+                        <td class="slds-cell-wrap">Nome<br/>{!course.Name}</td>
+                        <td class="slds-cell-wrap">Codice<br/>{!course.Code__c}</td>
+                        <td class="slds-cell-wrap">ID<br/>{!course.courseId__c}</td>
+                        <td class="slds-cell-wrap">
+                            <apex:outputText value="Data iscrizione<br/>{0,date,long}" escape="false">
+                                <apex:param value="{!student.enrolledCourses[course.ID].EnrollmentDate__c}" /> 
+                            </apex:outputText>
+                        </td>
+                        <td class="slds-cell-wrap">Stato<br/>{!student.enrolledCourses[course.ID].Status__c}</td>
+                        <td class="slds-cell-wrap">
+                            <apex:outputText value="Data completamento<br/>{0,date,long}" escape="false">
+                                <apex:param value="{!student.enrolledCourses[course.ID].DateCompleted__c}" /> 
+                            </apex:outputText>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="slds-cell-wrap" colspan="6">Descrizione<br/>{!course.Description__c}</td>
+                    </tr>
+                </table>
+            </div>
+        </apex:repeat>
+    </div>
+
+    <style type="text/css">
+        .section_data {
+            margin: 4px;
+            width: 100%;
+            text-align: center;
+        }
+        .section_data table td {
+            text-align: center;
+        }
+        .aninfo {
+            margin: 6px 4px 6px 4px;
+            width: 100%;
+            border-top: 1px solid black;
+            border-bottom: 1px solid black;
+        }
+        .std_name {
+            font-size: 20px;
+            margin: 10px 10px 20px 20px;
+        }
+        .titoletto {
+            margin: 8px;
+            font-size: 20px;
+        }
+    </style>
+</apex:component>
