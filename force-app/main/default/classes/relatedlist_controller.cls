@@ -2,7 +2,7 @@
  * @description       : Visualforce component Controller class (CustomRelatedlist.component)
  * @author            : f.ruggieri89@gmail.com
  * @group             : 
- * @last modified on  : 10-12-2020
+ * @last modified on  : 10-13-2020
  * @last modified by  : f.ruggieri89@gmail.com
  * Modifications Log 
  * Ver   Date         Author                   Modification
@@ -36,7 +36,7 @@ public with sharing class relatedlist_controller {
     }
 
     /*
-     * Standard set controller cant manage with wrappers like Student_wrapper, that's why it is necessary to build a custom controller
+     * Standard set controller cant manage with wrappers like Student_wrapper, I had to build a custom controller
      * 
      */
     public class CustomController {
