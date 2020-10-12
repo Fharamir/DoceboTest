@@ -1,5 +1,5 @@
 /**
- * @description       : Generic Trigger Handler logics
+ * @description       : Generic Trigger Handler logics (No need for testclass until now)
  * @author            : f.ruggieri89@gmail.com
  * @group             : 
  * @last modified on  : 10-12-2020

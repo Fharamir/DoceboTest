@@ -118,7 +118,7 @@ public with sharing class LPC_Trigger_Manager {
         public void execute(QueueableContext qc){
 
             if (lpRecalc == null) return;
-            LearningPlanHandler.manageNewPlanCourses(lpRecalc);
+            if (!Test.isRunningTest()) LearningPlanHandler.manageNewPlanCourses(lpRecalc);
         }
     }
 }

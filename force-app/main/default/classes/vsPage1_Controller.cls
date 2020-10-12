@@ -2,7 +2,7 @@
  * @description       : Visualforce page controller (VSPage1.page)
  * @author            : f.ruggieri89@gmail.com
  * @group             : 
- * @last modified on  : 10-12-2020
+ * @last modified on  : 10-13-2020
  * @last modified by  : f.ruggieri89@gmail.com
  * Modifications Log 
  * Ver   Date         Author                   Modification
@@ -23,9 +23,7 @@ public with sharing class vsPage1_Controller {
 
     /**
     * @description Constructor
-    * @author f.ruggieri89@gmail.com | 10-12-2020 
-    * @param = 
-    * @param newList<Student_wrapper> 
+    * @author f.ruggieri89@gmail.com | 10-12-2020
     **/
     public vsPage1_Controller() { students = new List<Student_wrapper>(); }
 

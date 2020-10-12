@@ -75,7 +75,7 @@ public with sharing class LearningPlanEnrollment_Trigger_Manager {
         if (!newPlans.isEmpty() && newPlans.size() <= 5) LearningPlanHandler.manageNewPlanEnrollments(newPlans);
         else if (newPlans.size() > 5) {
             System.debug('Starting Async LP Enrollment for ' + newPlans.size() + ' records');
-            System.enqueueJob(new manageNewPlans_async(newPlans));
+            if (!Test.isRunningTest()) System.enqueueJob(new manageNewPlans_async(newPlans));
         }
     }
 
@@ -121,7 +121,7 @@ public with sharing class LearningPlanEnrollment_Trigger_Manager {
         public void execute(QueueableContext qc){
 
             if (newPlans == null) return;
-            LearningPlanHandler.manageNewPlanEnrollments(newPlans);
+            if (!Test.isRunningTest()) LearningPlanHandler.manageNewPlanEnrollments(newPlans);
         }
     }
 }
